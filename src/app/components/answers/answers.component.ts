@@ -20,7 +20,7 @@ export class AnswersComponent implements OnInit {
       if (data) {
         const incorrectAnswers = data.incorrect_answers ?? [];
         const correctAnswer = data.correct_answer ?? '';
-        this.answers = [...incorrectAnswers, correctAnswer];
+        this.answers = [...incorrectAnswers, correctAnswer].sort(()=>0.5*[...incorrectAnswers, correctAnswer].length).slice();
         this.question = data;
       }
     });
