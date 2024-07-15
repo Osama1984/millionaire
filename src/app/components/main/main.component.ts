@@ -27,9 +27,6 @@ export class MainComponent implements OnInit {
     })
     setInterval(()=>{this.service.setCurrentQuestion(this.level)},3000);
     this.service.getCurrentQuestion();
-      this.service.getCurrentQuestion().subscribe((data:Question|null)=>{
-        this.question=data;
-      })
   }
 
   ngOnDestroy(): void {

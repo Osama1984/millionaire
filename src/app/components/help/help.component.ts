@@ -6,7 +6,7 @@ import { BaseChartDirective } from 'ng2-charts';
 import { CommonModule } from '@angular/common';
 import { Chart, registerables  } from 'chart.js';
 import { HttpClient } from '@angular/common/http';
-import { tap } from 'rxjs';
+import { take, tap } from 'rxjs';
 @Component({
   selector: 'app-sidebar-help',
   standalone:true,

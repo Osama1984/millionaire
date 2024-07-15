@@ -116,7 +116,7 @@ export class GameService {
   }
 
   deleteAnswers(): void {
-    let question = this.currentQuestion.value;
+    const question = this.currentQuestion.value;
     
     if (question && question.incorrect_answers.length >= 2) {
       const indicesToRemove = this.getTwoRandomIndices(question.incorrect_answers.length);

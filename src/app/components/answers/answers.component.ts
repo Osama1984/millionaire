@@ -2,14 +2,15 @@ import { Component, Input, OnInit } from '@angular/core';
 import { Question } from '../../interfaces/game';
 import { CommonModule } from '@angular/common';
 import { GameService } from '../../services/game.service';
-import { distinctUntilChanged } from 'rxjs/operators';
+import { distinctUntilChanged, take } from 'rxjs';
+import { DistinctUntilChangedPipe } from '../../pipes/distinictPipe';
 
 @Component({
   selector: 'app-answers',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, DistinctUntilChangedPipe],
   templateUrl: './answers.component.html',
-  styleUrls: ['./answers.component.scss']
+  styleUrls: ['./answers.component.scss'],
 })
 export class AnswersComponent implements OnInit {
   @Input() question!: Question | null;
@@ -20,7 +21,6 @@ export class AnswersComponent implements OnInit {
 
   ngOnInit(): void {
     this.service.getCurrentQuestion().pipe(
-      distinctUntilChanged((prev, curr) => prev?.question === curr?.question)
     ).subscribe((data: Question | null) => {
       if (data) {
         const incorrectAnswers = data.incorrect_answers ?? [];
