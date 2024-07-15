@@ -1,0 +1,36 @@
+<div class="flex space-x-4 w-full flex-row items-center justify-center">
+    <button class="rounded-full overflow-hidden focus:outline-none">
+      <img src="/assets/group-person-asking-question-icon-260nw-1986188720.png"
+           alt="Ask People"
+           width="75"
+           height="75"
+           title="Ask People"
+           *ngIf="askPeople"
+           (click)="askPeopleVote()"
+           class="circular-image">
+    </button>
+  
+    <button class="rounded-full overflow-hidden focus:outline-none">
+      <img src="/assets/question-mark-dialog-box-1.png"
+           alt="Ask People"
+           width="75"
+           height="75"
+           *ngIf="changeQuestion"
+           title="Change Question"
+           class="circular-image"
+           (click)="Change()"
+           >
+    </button>
+  
+    <button class="rounded-full overflow-hidden focus:outline-none" (click)="deleteTwoAnswers()" *ngIf="deleteAnswers">
+      <img src="/assets/5050.jpg"
+           alt="Delete Two Answers"
+           width="75"
+           height="75"
+           title="Delete Two Answers"
+           class="circular-image">
+    </button>
+  </div>
+  <div class="chart-container transition-all ease-in-out" *ngIf="displayChart" >
+    <canvas  id="MyChart" #chartRef>{{ chart }}</canvas>
+</div>

@@ -1,0 +1,15 @@
+<div class="w-full bg-transparent flex flex-col h-full">
+    <ng-container *ngIf="place==='right'" class="w-full h-full">
+      <div class="w-full h-full bg-transparent relative flex flex-col justify-between items-center">
+        <div class="w-full max-h-fit">
+          <app-sidebar-timer></app-sidebar-timer>
+        </div>
+        <div class="w-full max-h-fit">
+          <app-sidebar-score></app-sidebar-score>
+        </div>
+      </div>
+    </ng-container>
+     <ng-container *ngIf="place==='left'">
+      <app-sidebar-levels></app-sidebar-levels>
+    </ng-container>
+  </div>

@@ -1,0 +1,35 @@
+<ng-container *ngIf="gameStarted">
+  <!-- Application Container Start -->
+  <div class="min-w-screen min-h-screen bg-slate-950 flex flex-col lg:flex-row">
+    <!-- Conditional Layout Based on gameStarted -->
+    <div *ngIf="gameStarted" class="w-full lg:w-1/5 bg-transparent p-6 flex-shrink-0">
+      <app-sidebar [place]="'left'" class="w-full h-full"></app-sidebar>
+    </div>
+
+    <div class="flex-1 bg-slate-950 p-6 flex flex-col justify-center items-center">
+      <app-main *ngIf="gameStarted"></app-main>
+      <!-- Placeholder or loading indicator for !gameStarted condition -->
+      <div *ngIf="!gameStarted" class="text-white text-2xl">Game Not Started</div>
+    </div>
+
+    <div *ngIf="gameStarted" class="w-full lg:w-1/5 bg-transparent p-6 flex-shrink-0">
+      <app-sidebar [place]="'right'" class="w-full h-full"></app-sidebar>
+    </div>
+  </div>
+  <!-- Application Container End -->
+</ng-container>
+
+<ng-container *ngIf="!gameStarted&&!gameEnded">
+  <div class="min-w-screen min-h-screen bg-slate-50 flex flex-col lg:flex-row" *ngIf="!gameStarted">
+    <div class="text-white text-2xl flex justify-center items-center flex-1"><button type="button" class="bg-sky-500 p-4 rounded" (click)="Start()">Start Game</button></div>
+  </div>
+</ng-container>
+<ng-container *ngIf="!gameStarted && gameEnded">
+  <div class="min-w-screen min-h-screen bg-slate-950 flex flex-col lg:flex-row">
+    <div class="text-white text-2xl flex justify-center items-center flex-1">
+      <h1 *ngIf="score > 0&&score<1000000">Congratulations! You win {{ score | currency:'USD' }}</h1>
+      <h1 *ngIf="score === 0">Sorry, you win {{ score | currency:'USD' }}</h1>
+      <h1 *ngIf="score === 1000000">Congratulations! you are the millionaire</h1>
+    </div>
+  </div>
+</ng-container>
