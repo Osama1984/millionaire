@@ -20,14 +20,15 @@ export class AnswersComponent implements OnInit {
       if (data) {
         const incorrectAnswers = data.incorrect_answers ?? [];
         const correctAnswer = data.correct_answer ?? '';
-        let allAnswers = [...incorrectAnswers, correctAnswer];
-        allAnswers=allAnswers.sort(() => Math.random() - 0.5);
-        this.answers = [...allAnswers];
+        this.setAnswers([...incorrectAnswers, correctAnswer]);
       }
     });
-    this.service.getCurrentLevel().subscribe((levelResponse:number)=>{
-      this.level=levelResponse
-    });
+  }
+  setAnswers(answers: string[]): void {
+      this.answers = this.shuffleAnswers(answers);
+  }
+  shuffleAnswers(answers: string[]): string[] {
+      return answers.sort(() => Math.random() - 0.5);
   }
   selectAnswer(answer:string){
     if(answer===this.question?.correct_answer){
