@@ -20,8 +20,9 @@ export class AnswersComponent implements OnInit {
       if (data) {
         const incorrectAnswers = data.incorrect_answers ?? [];
         const correctAnswer = data.correct_answer ?? '';
-        this.answers = [...incorrectAnswers, correctAnswer].sort(()=>0.5*[...incorrectAnswers, correctAnswer].length).slice();
-        this.question = data;
+        let allAnswers = [...incorrectAnswers, correctAnswer];
+        allAnswers=allAnswers.sort(() => Math.random() - 0.5);
+        this.answers = [...allAnswers];
       }
     });
     this.service.getCurrentLevel().subscribe((levelResponse:number)=>{
