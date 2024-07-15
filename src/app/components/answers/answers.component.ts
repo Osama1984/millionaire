@@ -23,6 +23,7 @@ export class AnswersComponent implements OnInit {
     this.service.getCurrentQuestion().pipe(
     ).subscribe((data: Question | null) => {
       if (data) {
+        this.question=data;
         const incorrectAnswers = data.incorrect_answers ?? [];
         const correctAnswer = data.correct_answer ?? '';
         this.setAnswers([...incorrectAnswers, correctAnswer]);
@@ -39,6 +40,7 @@ export class AnswersComponent implements OnInit {
   }
 
   selectAnswer(answer: string): void {
+    console.log(this.question?.correct_answer,answer)
     if (answer === this.question?.correct_answer) {
       let score = 0;
       switch (this.level) {

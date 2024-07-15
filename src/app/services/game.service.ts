@@ -79,18 +79,8 @@ export class GameService {
   }
 
   setCurrentLevel(level: number): void {
-    if (level <= this.questions.value.length - 1 && this.questions.value.length === 15) {
       this.currentLevel.next(level);
       this.setCurrentQuestion(level);
-    } else if (this.questions.value.length < 15) {
-      setTimeout(() => {
-        this.currentLevel.next(level);
-        this.setCurrentQuestion(level);
-      }, 2000);
-    }
-    if (level > 14) {
-      this.gameEnded.next(true);
-    }
   }
 
   setCurrentQuestion(level: number): void {
