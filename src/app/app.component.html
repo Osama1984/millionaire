@@ -3,7 +3,7 @@
 </div>
 
 <div *ngIf="loading$ | async; else gameContent">
-    <div class="spinner">Loading...</div>
+    <ngx-spinner type="ball-scale-multiple"></ngx-spinner>
 </div>
 
 <ng-template #gameContent>
