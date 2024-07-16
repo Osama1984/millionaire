@@ -1,0 +1,22 @@
+<div class="grid grid-cols-9 gap-1 md:gap-3 w-full h-full">
+    <div class="h-full bg-white col-span-3 md:col-span-2">
+      <app-levels></app-levels>
+    </div>
+    <div class="bg-gradient-to-br from-slate-50 to-slate-100 col-span-6 md:col-span-7 h-full flex flex-col items-center justify-between">
+      <div class="w-full min-h-12 p-2 flex flex-row justify-between items-center  bg-gradient-to-br from-sky-400 to-sky-900 h-max">
+        <app-score></app-score>
+        <app-timer></app-timer>
+      </div>
+      <div class="w-full p-2 flex flex-col justify-between items-center flex-1 bg-gradient-to-br from-sky-200 to-sky-900 h-max">
+        <div class="w-full md:w-8/12 min-h-14 flex flex-col items-center justify-evenly">
+          <app-help class="flex w-full"></app-help>
+        </div>
+        <div class="w-full md:w-11/12 min-h-60 flex flex-col items-center justify-center bg-transparent">
+          <app-question></app-question>
+        </div>
+        <div class="w-full md:w-11/12 min-h-60 flex flex-col items-center justify-center bg-transparent">
+          <app-answers></app-answers>
+        </div>
+      </div>
+    </div>
+  </div>

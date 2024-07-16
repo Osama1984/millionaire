@@ -1,0 +1,32 @@
+<div class="flex space-x-4 w-full"
+     [ngClass]="{'flex-col justify-evenly items-center': displayChart===false, 'flex-row items-center justify-center': displayChart===true}">
+  <button class="rounded-full overflow-hidden focus:outline-none" *ngIf="askPeople">
+    <img src="/assets/group-person-asking-question-icon-260nw-1986188720.png"
+         alt="Ask People"
+         width="75"
+         height="75"
+         title="Ask People"
+         (click)="askPeopleVote()"
+         class="circular-image">
+  </button>
+
+  <button class="rounded-full overflow-hidden focus:outline-none" *ngIf="changeQuestion" (click)="changeTheQuestion()">
+    <img src="/assets/question-mark-dialog-box-1.png"
+         alt="Change Question"
+         width="75"
+         height="75"
+         title="Change Question">
+  </button>
+
+  <button class="rounded-full overflow-hidden focus:outline-none" *ngIf="deleteAnswers" (click)="deleteTwoAnswers()">
+    <img src="/assets/5050.jpg"
+         alt="Delete Two Answers"
+         width="75"
+         height="75"
+         title="Delete Two Answers"
+         class="circular-image">
+  </button>
+  <div class="chart-container transition-all ease-in-out" *ngIf="displayChart">
+    <canvas id="MyChart" #chartRef>{{ chart }}</canvas>
+  </div>
+</div>

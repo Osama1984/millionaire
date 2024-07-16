@@ -1,0 +1,9 @@
+<ng-container *ngIf="question">
+    <div class="w-full min-h-fit">
+      <app-sidebar-help></app-sidebar-help>
+    </div>
+    <div class="text-gray-700 mb-8 flex flex-col items-center justify-center h-full bg-transparent">
+        <h2 class="text-3xl font-bold mb-4 text-center">Question</h2>
+        <strong class="text-2xl text-center" [innerHTML]="question"></strong>
+      </div>
+    </ng-container>

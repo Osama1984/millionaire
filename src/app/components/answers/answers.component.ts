@@ -94,7 +94,11 @@ export class AnswersComponent implements OnInit {
       }
       this.service.updateScore(score);
       this.service.setCurrentLevel(this.level + 1);
+      this.service.setCurrentQuestion(this.level+1);
+      this.level=this.level++;
+      console.log(this.question.correct_answer, answer, this.level)
     } else {
+      console.log(this.question?.correct_answer, answer, this.level);
       this.service.setGameEnd();
     }
   }

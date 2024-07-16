@@ -1,133 +1,140 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, throwError, of, concat } from 'rxjs';
-import { delay, tap, catchError, retryWhen, mergeMap, map, take } from 'rxjs/operators';
+import { BehaviorSubject, Observable, of } from 'rxjs';
+import { map, delay, finalize } from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
 import { Game, Question } from '../interfaces/game';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
 export class GameService {
-  private questions: BehaviorSubject<Question[]> = new BehaviorSubject<Question[]>([]);
-  private currentLevel: BehaviorSubject<number> = new BehaviorSubject<number>(0);
-  private currentQuestion: BehaviorSubject<Question|null> = new BehaviorSubject<Question|null>(null);
-  private gameEnded: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-  private score: BehaviorSubject<number> = new BehaviorSubject<number>(0);
-  
+  private questions$ : BehaviorSubject<Question[]> = new BehaviorSubject<Question[]>([]);
+  private answers$ : BehaviorSubject<String[]> = new BehaviorSubject<String[]>([]);
+  private question$ : BehaviorSubject<String> = new BehaviorSubject<String>('');
+  private correctAnswer$ : BehaviorSubject<String> = new BehaviorSubject<String>('');
+  private level$ : BehaviorSubject<number> = new BehaviorSubject<number>(0);
+  private endGame$ : BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  private loading$ : BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  private Scores:number[] = [0,100,200,300,500,1000,2000,4000,8000,16000,32000,64000,125000,250000,500000,1000000]
+  private Score: BehaviorSubject<number> = new BehaviorSubject<number>(0);
+
   constructor(private http: HttpClient) { }
 
-  restartGame(): void {
-    this.questions.next([]);
-    this.currentLevel.next(0);
-    this.currentQuestion.next(null);
-    this.gameEnded.next(false);
-    this.score.next(0); // Reset score
-  }
-
-  private prepareQuestions(): void {
-    const easyQuestions$ = this.fetchQuestions('easy', 0);
-    const mediumQuestions$ = this.fetchQuestions('medium', 1000);
-    const hardQuestions$ = this.fetchQuestions('hard', 1000);
-
-    concat(easyQuestions$, mediumQuestions$, hardQuestions$).subscribe();
-  }
-
-  private fetchQuestions(difficulty: string, delayTime: number): Observable<Game> {
-    return this.http.get<Game>(`https://opentdb.com/api.php?amount=5&difficulty=${difficulty}&type=multiple`).pipe(
-      delay(delayTime), // Delay before fetching
-      tap(data => this.addQuestions(data.results)),
-      retryWhen(errors =>
-        errors.pipe(
-          mergeMap((error: HttpErrorResponse) => {
-            if (error.status === 429) {
-              console.warn(`Rate limit exceeded. Retrying after delay.`);
-              return of(error).pipe(delay(10000)); // Retry after 10 seconds
-            }
-            return throwError(() => error);
-          })
-        )
-      ),
-      catchError(error => this.handleError(error))
-    );
-  }
-
-  private handleError(error: HttpErrorResponse): Observable<any> {
-    console.error('HTTP Error:', error.message);
-    return throwError(() => new Error(error.message));
-  }
-
-  private addQuestions(newQuestions: Question[]): void {
-    const currentQuestions = this.questions.value;
-    this.questions.next([...currentQuestions, ...newQuestions]);
-  }
-
   getQuestions(): Observable<Question[]> {
-    this.prepareQuestions();
-    return this.questions.asObservable();
+    return this.questions$.asObservable();
   }
 
-  getCurrentLevel(): Observable<number> {
-    return this.currentLevel.asObservable();
+  getAnswers(): Observable<String[]> {
+    return this.answers$.asObservable();
   }
 
-  checkGameEnd(): Observable<boolean> {
-    return this.gameEnded.asObservable();
+  getQuestion(): Observable<String> {
+    return this.question$.asObservable();
   }
 
-  getCurrentQuestion(): Observable<Question|null> {
-    return this.currentQuestion.asObservable();
+  getCorrectAnswer(): Observable<String> {
+    return this.correctAnswer$.asObservable();
   }
 
-  setCurrentLevel(level: number): void {
-      this.currentLevel.next(level);
-      this.setCurrentQuestion(level);
+  getEndGame(): Observable<boolean> {
+    return this.endGame$.asObservable();
   }
 
-  setCurrentQuestion(level: number): void {
-    const questions = this.questions.value;
-    if (questions.length > 0 && level < questions.length) {
-      this.currentQuestion.next(questions[level]);
-    } else {
-      this.currentQuestion.next(null);
-    }
-  }
-
-  setGameEnd(): void {
-    this.gameEnded.next(true);
-  }
-
-  updateScore(score:number): void {
-    const currentScore =score;
-    this.score.next(currentScore);
+  getLoading(): Observable<boolean> {
+    return this.loading$.asObservable();
   }
 
   getScore(): Observable<number> {
-    return this.score.asObservable();
+    return this.Score.asObservable();
+  }
+
+  setEndGame(value: boolean): void {
+    if (value) {
+      this.endGame$.next(true);
+      this.answers$.next(['']);
+      this.question$.next('');
+      this.correctAnswer$.next('');
+      this.Score.next(0);
+      this.level$.next(0);
+    } else {
+      this.endGame$.next(false);
+    }
+  }
+
+  setQuestion(): void {
+    const questions = this.questions$.getValue();
+    const level = this.level$.getValue();
+    if (questions.length > 0 && level < questions.length) {
+      this.question$.next(questions[level].question);
+    }
+  }
+
+  setAnswers(): void {
+    const questions = this.questions$.getValue();
+    const level = this.level$.getValue();
+    if (questions.length > 0 && level < questions.length) {
+      const currentQuestion = questions[level];
+      const answers = [...currentQuestion.incorrect_answers, currentQuestion.correct_answer].sort(() => Math.random() - 0.5);
+      this.answers$.next(answers);
+    }
+  }
+
+  setCorrectAnswer(): void {
+    const questions = this.questions$.getValue();
+    const level = this.level$.getValue();
+    if (questions.length > 0 && level < questions.length) {
+      this.correctAnswer$.next(questions[level].correct_answer);
+    }
+  }
+
+  setLevel(level: number): void {
+    if(level >= 15){
+      this.setEndGame(true);
+    } else {
+      this.level$.next(level);
+      this.setQuestion();
+      this.setAnswers();
+      this.setCorrectAnswer();
+      this.Score.next(this.Scores[this.level$.value]);
+    }
+  }
+
+  getLevel(): Observable<number> {
+    return this.level$.asObservable();
+  }
+
+  loadQuestions(): void {
+    this.loading$.next(true);
+    this.http.get<Game>(`https://opentdb.com/api.php?amount=16&type=multiple`).pipe(
+      delay(2000), // Delay for 2 seconds
+      map(data => {
+        this.questions$.next(data.results);
+        this.setQuestion();
+        this.setAnswers();
+        this.setCorrectAnswer();
+      }),
+      finalize(() => {
+        this.loading$.next(false);
+      })
+    ).subscribe();
   }
 
   deleteAnswers(): void {
-    const question = this.currentQuestion.value;
-    
-    if (question && question.incorrect_answers.length >= 2) {
-      const indicesToRemove = this.getTwoRandomIndices(question.incorrect_answers.length);
-      question.incorrect_answers = question.incorrect_answers.filter((_, index) => {
-        return !indicesToRemove.includes(index);
-      });
-      this.currentQuestion.next(question);
+    let answers = this.answers$.value;
+    const correct = this.correctAnswer$.value;
+    answers = answers.filter(answer => answer === correct || answers.indexOf(answer) !== answers.indexOf(correct));
+    while (answers.length > 2) {
+      const indexToRemove = answers.findIndex(answer => answer !== correct);
+      if (indexToRemove !== -1) {
+        answers.splice(indexToRemove, 1);
+      } else {
+        break;
+      }
     }
-  }
   
-  // Utility function to get two unique random indices
-  private getTwoRandomIndices(max: number): number[] {
-    const indices = new Set<number>();
-    
-    while (indices.size < 2) {
-      const randomIndex = Math.floor(Math.random() * max);
-      indices.add(randomIndex);
-    }
-    
-    return Array.from(indices);
+    this.answers$.next(answers);
   }
+
   generateVotes(options: string[]): { [key: string]: number } {
     const votes: { [key: string]: number } = {};
     const totalVotes = 100; // Total percentage votes
@@ -146,17 +153,19 @@ export class GameService {
     return votes;
   }
 
+  changeTheQuestion(): void {
+    const questions = this.questions$.getValue();
+    const currentLevel = this.level$.getValue();
   
-  setCurrentQuestionFromHelpOption() {
-    return this.http.get<Game>('https://opentdb.com/api.php?amount=1&type=multiple').pipe(
-      take(1), // Take only the first emitted value (complete after one emission)
-      map((data: Game) => {
-        if (data.results && data.results.length > 0) {
-          this.currentQuestion.next(data.results[0]);
-          return data.results[0]; // Return the current question
-        }
-        return null; // Return null if no results or results are empty
-      })
-    );
+    if (questions.length > 0 && currentLevel < questions.length) {
+      const lastQuestionIndex = questions.length - 1;
+      console.log(lastQuestionIndex);
+      // Set the question, answers, and correct answer to the last question
+      this.question$.next(questions[lastQuestionIndex].question);
+      const lastQuestion = questions[lastQuestionIndex];
+      const answers = [...lastQuestion.incorrect_answers, lastQuestion.correct_answer].sort(() => Math.random() - 0.5);
+      this.answers$.next(answers);
+      this.correctAnswer$.next(lastQuestion.correct_answer);
+    }
   }
 }

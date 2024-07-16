@@ -25,7 +25,7 @@ export class MainComponent implements OnInit {
       this.level=data;
       console.log(this.level);
     })
-    setInterval(()=>{this.service.setCurrentQuestion(this.level)},3000);
+    setInterval(()=>{this.service.setCurrentQuestion(this.level)},500);
     this.service.getCurrentQuestion();
   }
 

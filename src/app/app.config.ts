@@ -1,10 +1,11 @@
-import { ApplicationConfig } from '@angular/core';
+import { ApplicationConfig, NgModule } from '@angular/core';
 import { provideRouter } from '@angular/router';
-import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
+import { provideAnimations } from '@angular/platform-browser/animations'
 import { routes } from './app.routes';
+import { MillionaireModuleModule } from './millionaire-module/millionaire-module.module';
 import { provideHttpClient } from '@angular/common/http';
-import { BarController, Colors, Legend } from 'chart.js';
+import { provideToastr } from 'ngx-toastr';
 
 export const appConfig: ApplicationConfig = {
-  providers: [provideRouter(routes), provideHttpClient(), provideCharts({ registerables: [BarController, Legend, Colors] })],
+  providers: [provideRouter(routes), provideAnimations(), provideHttpClient(), provideToastr()],
 };
