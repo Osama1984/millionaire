@@ -1,27 +1,23 @@
-# Millionaire
+# Millionaire Game App
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.3.8.
+This project is a simple implementation of the "Who Wants to Be a Millionaire?" game using Angular. It fetches trivia questions from the Open Trivia Database (opentdb.com) and provides an interactive game interface.
 
-## Development server
+## Features
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+- Fetches questions from the Open Trivia Database API.
+- Implements a game interface with questions and multiple-choice answers.
+- Includes a sidebar for score, help options, and levels.
+- Utilizes Angular services for API communication and game state management.
+- Uses RxJS for handling asynchronous operations and HTTP requests.
+- Integrates TailwindCSS for responsive layouts.
 
-## Code scaffolding
+##Link
+<a href="https://marmil-millionaire-app.netlify.app">marmil-millionaire-app</a>
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
 
-## Build
+## Installation
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/Osama1984/millionaire
+   cd millionaire-game-app
